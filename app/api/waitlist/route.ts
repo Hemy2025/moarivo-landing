@@ -108,7 +108,9 @@ export async function POST(req: NextRequest) {
       .select('*', { count: 'exact', head: true })
 
     // Send welcome email via Resend (non-blocking — don't fail the request if email fails)
-    if (process.env.RESEND_API_KEY) {
+    if (!process.env.RESEND_API_KEY) {
+      console.log('RESEND_API_KEY non trovata nelle env vars')
+    } else {
       try {
         const resend = new Resend(process.env.RESEND_API_KEY)
         const isIt = language === 'it'
@@ -124,6 +126,7 @@ export async function POST(req: NextRequest) {
         })
       } catch (emailErr) {
         console.error('Email send error:', emailErr)
+        console.error('Email send error completo:', JSON.stringify(emailErr))
       }
     }
 
