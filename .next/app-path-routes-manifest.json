@@ -1,0 +1,6 @@
+{
+  "/_not-found/page": "/_not-found",
+  "/api/waitlist/count/route": "/api/waitlist/count",
+  "/api/waitlist/route": "/api/waitlist",
+  "/page": "/"
+}
