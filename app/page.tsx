@@ -1,4 +1,5 @@
 'use client'
+import { Suspense } from 'react'
 import { motion } from 'framer-motion'
 import Navbar from '@/components/Navbar'
 import Logo from '@/components/Logo'
@@ -7,6 +8,7 @@ import WaitlistForm from '@/components/WaitlistForm'
 import SpotsCounter from '@/components/SpotsCounter'
 import FeatureCard from '@/components/FeatureCard'
 import PricingCard from '@/components/PricingCard'
+import ConfirmToast from '@/components/ConfirmToast'
 import { useLang } from '@/lib/LangContext'
 import { i18n } from '@/lib/i18n'
 
@@ -16,6 +18,9 @@ export default function Home() {
 
   return (
     <>
+      <Suspense>
+        <ConfirmToast />
+      </Suspense>
       <Navbar />
 
       {/* HERO */}
