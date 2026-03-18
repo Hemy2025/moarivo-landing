@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import { LangProvider } from '@/lib/LangContext'
+import CookieBanner from '@/components/CookieBanner'
 
 export const metadata: Metadata = {
   title: "Mo'Arivo — Il CRM AI per consulenti e freelance",
@@ -23,6 +24,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body style={{ backgroundColor: '#0A1628', color: '#fff', margin: 0 }}>
         <LangProvider>{children}</LangProvider>
+        <CookieBanner />
       </body>
     </html>
   )

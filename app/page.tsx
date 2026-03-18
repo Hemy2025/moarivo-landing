@@ -196,6 +196,13 @@ export default function Home() {
           </div>
           <p className="text-sm mb-2" style={{ color: '#5F5E5A' }}>{t.footer.tagline}</p>
           <p className="text-sm" style={{ color: '#5F5E5A' }}>{t.footer.copyright}</p>
+          <div className="flex flex-wrap justify-center gap-3 mt-4 text-xs" style={{ color: '#5F5E5A' }}>
+            <a href="/privacy" className="hover:text-white transition-colors">Privacy Policy</a>
+            <span>·</span>
+            <a href="/privacy#cookie" className="hover:text-white transition-colors">Cookie Policy</a>
+            <span>·</span>
+            <a href="mailto:privacy@moarivo.com" className="hover:text-white transition-colors">privacy@moarivo.com</a>
+          </div>
         </div>
       </footer>
     </>
