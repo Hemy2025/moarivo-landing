@@ -14,38 +14,45 @@ function hashValue(value: string): string {
   return createHash('sha256').update(value).digest('hex').slice(0, 16)
 }
 
-function confirmEmailHtml(confirmUrl: string, lang: string): string {
-  const isIt = lang !== 'en'
+function confirmEmailHtml(confirmUrl: string, unsubscribeUrl: string): string {
   return `<!DOCTYPE html>
-<html lang="${isIt ? 'it' : 'en'}">
-<body style="margin:0;padding:0;background:#0A1628;font-family:Arial,sans-serif;">
-  <div style="max-width:480px;margin:40px auto;padding:32px 24px;background:#0F1F0F;border-radius:16px;border:1px solid rgba(29,158,117,0.2);">
-    <div style="margin-bottom:24px;">
-      <span style="color:#1D9E75;font-weight:900;font-size:22px;">Mo'</span><span style="color:#fff;font-weight:900;font-size:22px;">Arivo</span>
-    </div>
-    <p style="font-size:15px;color:#d1d5db;line-height:1.6;margin:0 0 12px;">
-      ${isIt ? 'Grazie per esserti iscritto alla wait-list! 🎉' : 'Thanks for joining the waitlist! 🎉'}
-    </p>
-    <p style="font-size:14px;color:#9ca3af;line-height:1.6;margin:0 0 28px;">
-      ${isIt
-        ? 'Clicca il bottone qui sotto per confermare la tua e-mail e completare l\'iscrizione. Il link è valido per 24 ore.'
-        : 'Click the button below to confirm your email and complete your signup. The link is valid for 24 hours.'}
-    </p>
-    <a href="${confirmUrl}"
-      style="display:inline-block;padding:14px 28px;background:#1D9E75;
-             color:#fff;font-weight:700;font-size:14px;border-radius:24px;text-decoration:none;">
-      ${isIt ? '✓ Conferma iscrizione' : '✓ Confirm signup'}
-    </a>
-    <p style="margin-top:32px;font-size:11px;color:#4b5563;line-height:1.7;">
-      ${isIt
-        ? 'Se non hai richiesto questa iscrizione, ignora questa e-mail — non verrà fatto nulla.'
-        : "If you didn't request this signup, ignore this email — nothing will happen."}<br><br>
-      Bitwear S.r.l. · Via degli Alpini 7, 38027 Malè (TN) · P.IVA 02480770227<br>
-      <a href="${process.env.NEXT_PUBLIC_APP_URL}/privacy" style="color:#1D9E75;">Privacy Policy</a>
-      &nbsp;·&nbsp;
-      <a href="mailto:privacy@moarivo.com" style="color:#1D9E75;">privacy@moarivo.com</a>
-    </p>
-  </div>
+<html>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="margin:0;padding:0;background:#070711;font-family:Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#070711;padding:40px 20px;">
+    <tr><td align="center">
+      <table width="560" cellpadding="0" cellspacing="0" style="background:#0F0E1A;border-radius:16px;border:1px solid #1E1B4B;overflow:hidden;">
+        <tr><td style="background:#7C3AED;padding:32px;text-align:center;">
+          <h1 style="color:#fff;font-size:28px;margin:0;letter-spacing:2px;">MOARIVO</h1>
+          <p style="color:#C4B5FD;margin:8px 0 0;font-size:13px;">Personal AI CRM</p>
+        </td></tr>
+        <tr><td style="padding:40px 48px;">
+          <p style="color:#A5B4FC;font-size:13px;margin:0 0 8px;text-transform:uppercase;letter-spacing:1px;">Sei dentro</p>
+          <h2 style="color:#FFFFFF;font-size:22px;margin:0 0 20px;">Conferma la tua iscrizione</h2>
+          <p style="color:#94A3B8;font-size:15px;line-height:1.6;margin:0 0 24px;">
+            Sei quasi dentro alla waitlist MOARIVO. Clicca il bottone per confermare la tua email e bloccare il tuo posto.
+          </p>
+          <div style="background:#1E1B4B;border-radius:8px;border-left:4px solid #7C3AED;padding:16px 20px;margin:0 0 32px;">
+            <p style="color:#C4B5FD;font-size:14px;margin:0 0 4px;font-weight:bold;">Offerta Early Adopter</p>
+            <p style="color:#94A3B8;font-size:14px;margin:0;">I primi 1.000 iscritti ottengono <strong style="color:#C4B5FD;">2 mesi Pro gratuiti</strong> al lancio.</p>
+          </div>
+          <table width="100%" cellpadding="0" cellspacing="0">
+            <tr><td align="center" style="padding:0 0 32px;">
+              <a href="${confirmUrl}" style="display:inline-block;background:#7C3AED;color:#fff;text-decoration:none;padding:16px 48px;border-radius:8px;font-size:16px;font-weight:bold;">
+                Conferma iscrizione →
+              </a>
+            </td></tr>
+          </table>
+          <p style="color:#64748B;font-size:13px;text-align:center;margin:0;">Il link scade in 24 ore. Se non hai richiesto questo, ignora questa email.</p>
+        </td></tr>
+        <tr><td style="background:#070711;padding:24px 48px;border-top:1px solid #1E1B4B;text-align:center;">
+          <p style="color:#475569;font-size:12px;margin:0;">
+            © 2026 MOARIVO — Bitwear S.r.l. · <a href="https://moarivo.com/privacy" style="color:#7C3AED;">Privacy</a> · <a href="${unsubscribeUrl}" style="color:#7C3AED;">Cancellati</a>
+          </p>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
 </body>
 </html>`
 }
@@ -116,6 +123,7 @@ export async function POST(req: NextRequest) {
     } else {
       const resend = new Resend(process.env.RESEND_API_KEY)
       const confirmUrl = `${process.env.NEXT_PUBLIC_APP_URL}/api/waitlist/confirm?token=${token}`
+      const unsubscribeUrl = `${process.env.NEXT_PUBLIC_APP_URL}/api/waitlist/unsubscribe?email=${encodeURIComponent(normalizedEmail)}`
       const isIt = language !== 'en'
 
       try {
@@ -125,7 +133,7 @@ export async function POST(req: NextRequest) {
           subject: isIt
             ? 'Conferma la tua iscrizione a MOARIVO'
             : 'Confirm your MOARIVO signup',
-          html: confirmEmailHtml(confirmUrl, language),
+          html: confirmEmailHtml(confirmUrl, unsubscribeUrl),
         })
       } catch (emailErr) {
         console.error('Resend error:', emailErr)
